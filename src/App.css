@@ -1,28 +1,46 @@
 .App {
-  width: 1200px;
+  width: 1000px;
   margin: 50px auto;
+  background-color: #e9ecef;
+  color: #495057;
 }
 
 .login-box {
-  border: 5px solid #000;
+  border: 1px solid #000;
 }
 
 h1 {
   font-size: 48px;
   text-align: center;
+  font-weight: 500;
 }
 
 .input-grid {
   font-size: 24px;
   display: grid;
   width: 800px;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 2fr;
   gap: 15px;
+  margin-left: auto;
+  margin-right: auto;
   margin-bottom: 20px;
 }
 
 .input-grid label {
   justify-self: end;
+}
+
+.login-hint {
+  height: 80px;
+  grid-column: 2/3;
+  justify-self: end;
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+
+.failed-text {
+  color: #e03131;
 }
 
 .btn-login {
@@ -31,10 +49,32 @@ h1 {
   font-size: 24px;
   border-radius: 10px;
   cursor: pointer;
-  grid-column: 1/3;
-  justify-self: end;
 }
 
 .btn-login:hover {
   background-color: #52b9cb;
+}
+
+.control-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  justify-content: center;
+}
+
+.btn-logout {
+  width: 100px;
+  height: 50px;
+  font-size: 16px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.btn-logout:hover {
+  background-color: #52b9cb;
+}
+
+.user-profile {
+  font-size: 32px;
+  padding-left: 24px;
 }
