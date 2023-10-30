@@ -92,3 +92,38 @@ h1 {
   font-size: 32px;
   padding-left: 24px;
 }
+
+.signup-box {
+  padding-bottom: 20px;
+}
+
+.signup-form {
+  margin: 0px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 24px;
+  gap: 12px;
+  width: 300px;
+}
+
+.signup-form label {
+  align-self: flex-start;
+}
+
+.signup-form input {
+  border: none;
+  border-bottom: 2px solid #495057;
+  background-color: #e9ecef;
+  font-size: 24px;
+  width: 300px;
+}
+
+.signup-form button {
+  width: 120px;
+  align-self: center;
+  font-size: 24px;
+  color: #e9ecef;
+  background-color: #495057;
+  box-shadow: 0px 10px 15px 0px #00000024;
+}

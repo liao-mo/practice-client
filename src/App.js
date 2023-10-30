@@ -10,20 +10,21 @@ function App() {
 
   useEffect(function () {
     const token = Cookies.get("jwt");
+    console.log(token);
+
+    //authorize user using jwt token stored in the cookies
     async function authenticate() {
       let config = {
         method: "get",
         maxBodyLength: Infinity,
         url: "http://localhost:3000/users/me",
         headers: {
-          Authorization:
-            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTJjZWM3OGFhOTIzMWRkODQ4NzE1OWEiLCJpYXQiOjE2OTc0NDY3NTh9.eA_aQ1ZO_zRGhi5cthDnjwuljWGVa0IR8ivbF9LC2vM",
+          Authorization: "Bearer " + token,
         },
       };
 
       try {
         const res = await axios.request(config);
-        // console.log(res);
 
         //sucessfully authenticate
         if (res.status === 200) {
@@ -35,6 +36,7 @@ function App() {
       }
     }
 
+    //if user has signed in
     if (token) {
       authenticate();
     }
@@ -42,7 +44,36 @@ function App() {
 
   function handleLogin(data) {
     setIsLogin(true);
-    setUserData(data);
+    setUserData(data.user);
+    Cookies.set("jwt", data.token, { expires: 7 });
+  }
+
+  function handleSignUp(data) {
+    data = JSON.stringify(data);
+
+    let config = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: "http://localhost:3000/users",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: data,
+    };
+
+    async function requestSignUp() {
+      try {
+        //fire the request of sign up to the server
+        const res = await axios.request(config);
+
+        //login after sign up
+        handleLogin(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    requestSignUp();
   }
 
   function handleLogout() {
@@ -69,7 +100,7 @@ function App() {
       </nav>
       {!isLogin ? (
         <>
-          {currentPage === "signUp" && <SignUp />}
+          {currentPage === "signUp" && <SignUp handleSignUp={handleSignUp} />}
           {currentPage === "login" && <Login onLogin={handleLogin} />}
         </>
       ) : (
@@ -79,8 +110,41 @@ function App() {
   );
 }
 
-function SignUp() {
-  return <p>sign up</p>;
+function SignUp({ handleSignUp }) {
+  const [name, setName] = useState("");
+  const [age, setAge] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  function handleFormSubmit(e) {
+    e.preventDefault();
+    const data = {
+      name,
+      age,
+      email,
+      password,
+    };
+    handleSignUp(data);
+  }
+  return (
+    <div className="signup-box">
+      <h1>Sign Up</h1>
+      <form className="signup-form" onSubmit={(e) => handleFormSubmit(e)}>
+        <label>Your name</label>
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <label>Age</label>
+        <input type="text" onChange={(e) => setAge(Number(e.target.value))} />
+        <label>Email</label>
+        <input type="text" onChange={(e) => setEmail(e.target.value)} />
+        <label>password</label>
+        <input type="text" onChange={(e) => setPassword(e.target.value)} />
+        <button>Sign up</button>
+      </form>
+    </div>
+  );
 }
 
 function Login({ onLogin }) {
@@ -110,10 +174,7 @@ function Login({ onLogin }) {
 
         //sucessfully login
         if (res.status === 200) {
-          onLogin(res.data.user);
-          // console.log(res.data);
-          Cookies.set("jwt", res.data.token, { expires: 7 });
-          // console.log(Cookies.get("jwt"));
+          onLogin(res.data);
         }
       } catch (error) {
         //console.log(error);
