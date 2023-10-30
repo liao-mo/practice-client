@@ -6,6 +6,7 @@ import Cookies from "js-cookie";
 function App() {
   const [isLogin, setIsLogin] = useState(false);
   const [userData, setUserData] = useState(undefined);
+  const [currentPage, setCurrentPage] = useState("login");
 
   useEffect(function () {
     const token = Cookies.get("jwt");
@@ -52,13 +53,34 @@ function App() {
 
   return (
     <div className="App">
+      <nav>
+        <button
+          className="btn-login-tab"
+          onClick={() => setCurrentPage("login")}
+        >
+          Login
+        </button>
+        <button
+          className="btn-signup-tab"
+          onClick={() => setCurrentPage("signUp")}
+        >
+          Sign Up
+        </button>
+      </nav>
       {!isLogin ? (
-        <Login onLogin={handleLogin} />
+        <>
+          {currentPage === "signUp" && <SignUp />}
+          {currentPage === "login" && <Login onLogin={handleLogin} />}
+        </>
       ) : (
         <ControlPanel userData={userData} onLogout={handleLogout} />
       )}
     </div>
   );
+}
+
+function SignUp() {
+  return <p>sign up</p>;
 }
 
 function Login({ onLogin }) {
@@ -94,7 +116,7 @@ function Login({ onLogin }) {
           // console.log(Cookies.get("jwt"));
         }
       } catch (error) {
-        console.log(error);
+        //console.log(error);
         setIsFailed(true);
       }
     }

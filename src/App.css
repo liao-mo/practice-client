@@ -5,8 +5,22 @@
   color: #495057;
 }
 
+nav {
+  display: flex;
+  gap: 5px;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.btn-login-tab,
+.btn-signup-tab {
+  color: #52b9cb;
+  font-size: 16px;
+  cursor: pointer;
+}
+
 .login-box {
-  border: 1px solid #000;
+  /* border: 1px solid #000; */
 }
 
 h1 {
