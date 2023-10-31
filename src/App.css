@@ -76,18 +76,6 @@ h1 {
   justify-content: center;
 }
 
-.btn-logout {
-  width: 100px;
-  height: 50px;
-  font-size: 16px;
-  border-radius: 10px;
-  cursor: pointer;
-}
-
-.btn-logout:hover {
-  background-color: #52b9cb;
-}
-
 .user-profile {
   font-size: 32px;
   padding-left: 24px;
@@ -126,4 +114,30 @@ h1 {
   color: #e9ecef;
   background-color: #495057;
   box-shadow: 0px 10px 15px 0px #00000024;
+}
+
+.controlPanel button {
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  background-color: #495057;
+  color: #e9ecef;
+  margin-right: 10px;
+}
+
+.controlPanel button:hover {
+  background-color: #52b9cb;
+}
+
+.btn-logout {
+  width: 100px;
+  height: 50px;
+  font-size: 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  background-color: #e9ecef;
+}
+
+.btn-logout:hover {
+  background-color: #52b9cb;
 }

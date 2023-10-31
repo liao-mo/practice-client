@@ -2,6 +2,10 @@ import "./App.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
+import Login from "./components/Login";
+import SignUp from "./components/SignUp";
+import Profile from "./components/Profile";
+import Update from "./components/Update";
 
 function App() {
   const [isLogin, setIsLogin] = useState(false);
@@ -10,7 +14,7 @@ function App() {
 
   useEffect(function () {
     const token = Cookies.get("jwt");
-    console.log(token);
+    // console.log(token);
 
     //authorize user using jwt token stored in the cookies
     async function authenticate() {
@@ -84,22 +88,22 @@ function App() {
 
   return (
     <div className="App">
-      <nav>
-        <button
-          className="btn-login-tab"
-          onClick={() => setCurrentPage("login")}
-        >
-          Login
-        </button>
-        <button
-          className="btn-signup-tab"
-          onClick={() => setCurrentPage("signUp")}
-        >
-          Sign Up
-        </button>
-      </nav>
       {!isLogin ? (
         <>
+          <nav>
+            <button
+              className="btn-login-tab"
+              onClick={() => setCurrentPage("login")}
+            >
+              Login
+            </button>
+            <button
+              className="btn-signup-tab"
+              onClick={() => setCurrentPage("signUp")}
+            >
+              Sign Up
+            </button>
+          </nav>
           {currentPage === "signUp" && <SignUp handleSignUp={handleSignUp} />}
           {currentPage === "login" && <Login onLogin={handleLogin} />}
         </>
@@ -110,112 +114,10 @@ function App() {
   );
 }
 
-function SignUp({ handleSignUp }) {
-  const [name, setName] = useState("");
-  const [age, setAge] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  function handleFormSubmit(e) {
-    e.preventDefault();
-    const data = {
-      name,
-      age,
-      email,
-      password,
-    };
-    handleSignUp(data);
-  }
-  return (
-    <div className="signup-box">
-      <h1>Sign Up</h1>
-      <form className="signup-form" onSubmit={(e) => handleFormSubmit(e)}>
-        <label>Your name</label>
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <label>Age</label>
-        <input type="text" onChange={(e) => setAge(Number(e.target.value))} />
-        <label>Email</label>
-        <input type="text" onChange={(e) => setEmail(e.target.value)} />
-        <label>password</label>
-        <input type="text" onChange={(e) => setPassword(e.target.value)} />
-        <button>Sign up</button>
-      </form>
-    </div>
-  );
-}
-
-function Login({ onLogin }) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isFailed, setIsFailed] = useState(false);
-
-  function handleLogin() {
-    async function loginUser() {
-      try {
-        let data = JSON.stringify({
-          email,
-          password,
-        });
-
-        let config = {
-          method: "post",
-          maxBodyLength: Infinity,
-          url: "http://localhost:3000/users/login",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          data: data,
-        };
-
-        const res = await axios.request(config);
-
-        //sucessfully login
-        if (res.status === 200) {
-          onLogin(res.data);
-        }
-      } catch (error) {
-        //console.log(error);
-        setIsFailed(true);
-      }
-    }
-
-    loginUser();
-  }
-
-  return (
-    <div className="login-box">
-      <h1>Login</h1>
-      <div className="input-grid">
-        <label>Email</label>
-        <input
-          type="text"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <label>Password</label>
-        <input
-          type="text"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <div className="login-hint">
-          {isFailed && <p className="failed-text">Failed to login</p>}
-          <button className="btn-login" onClick={handleLogin}>
-            Login
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function ControlPanel({ userData, onLogout }) {
   const [functionality, setFunctionality] = useState("profile");
   return (
-    <div>
+    <div className="controlPanel">
       <header className="control-header">
         <h2>Control Panel</h2>
         <button className="btn-logout" onClick={onLogout}>
@@ -225,18 +127,8 @@ function ControlPanel({ userData, onLogout }) {
       <button onClick={() => setFunctionality("profile")}>view profile</button>
       <button onClick={() => setFunctionality("update")}>update profile</button>
 
-      {functionality === "profile" && <UserProfile userData={userData} />}
-      {functionality === "update" && <p>update</p>}
-    </div>
-  );
-}
-
-function UserProfile({ userData }) {
-  return (
-    <div className="user-profile">
-      <p>Your Name: {userData.name}</p>
-      <p>Your age: {userData.age}</p>
-      <p>Your email: {userData.email}</p>
+      {functionality === "profile" && <Profile userData={userData} />}
+      {functionality === "update" && <Update userData={userData} />}
     </div>
   );
 }
