@@ -5,12 +5,14 @@ import Cookies from "js-cookie";
 import Login from "./components/Login";
 import SignUp from "./components/SignUp";
 import Profile from "./components/Profile";
-import Update from "./components/Update";
+import UpdateProfile from "./components/UpdateProfile";
+import UpdatePassword from "./components/UpdatePassword";
 
 function App() {
   const [isLogin, setIsLogin] = useState(false);
   const [userData, setUserData] = useState(undefined);
   const [currentPage, setCurrentPage] = useState("login");
+  const [functionality, setFunctionality] = useState("profile");
 
   useEffect(function () {
     const token = Cookies.get("jwt");
@@ -81,9 +83,61 @@ function App() {
   }
 
   function handleLogout() {
+    const token = Cookies.get("jwt");
+    let config = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: "http://localhost:3000/users/logout",
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    };
+
+    async function requestLogout() {
+      try {
+        await axios.request(config);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    requestLogout();
+
     setIsLogin(false);
     setUserData(undefined);
     Cookies.remove("jwt");
+  }
+
+  function handleUpdate(e, data) {
+    e.preventDefault();
+
+    //setup config for the request
+    let config = {
+      method: "patch",
+      maxBodyLength: Infinity,
+      url: "http://localhost:3000/users/me",
+      headers: {
+        Authorization: "Bearer " + Cookies.get("jwt"),
+      },
+      data,
+    };
+
+    //fire request for updating user profile
+    async function requestUpdate() {
+      try {
+        const rawData = await axios.request(config);
+
+        //update the userData state
+        let data = rawData.data;
+        setUserData({ ...userData, ...data });
+
+        //change the page back to the profile page
+        setFunctionality("profile");
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    requestUpdate();
   }
 
   return (
@@ -108,14 +162,38 @@ function App() {
           {currentPage === "login" && <Login onLogin={handleLogin} />}
         </>
       ) : (
-        <ControlPanel userData={userData} onLogout={handleLogout} />
+        <ControlPanel onLogout={handleLogout}>
+          <button
+            className="btn-nav"
+            onClick={() => setFunctionality("profile")}
+          >
+            view profile
+          </button>
+          <button
+            className="btn-nav"
+            onClick={() => setFunctionality("updateProfile")}
+          >
+            update profile
+          </button>
+          <button
+            className="btn-nav"
+            onClick={() => setFunctionality("updatePassword")}
+          >
+            update password
+          </button>
+
+          {functionality === "profile" && <Profile userData={userData} />}
+          {functionality === "updateProfile" && (
+            <UpdateProfile userData={userData} onUpdate={handleUpdate} />
+          )}
+          {functionality === "updatePassword" && <UpdatePassword />}
+        </ControlPanel>
       )}
     </div>
   );
 }
 
-function ControlPanel({ userData, onLogout }) {
-  const [functionality, setFunctionality] = useState("profile");
+function ControlPanel({ onLogout, children }) {
   return (
     <div className="controlPanel">
       <header className="control-header">
@@ -124,11 +202,7 @@ function ControlPanel({ userData, onLogout }) {
           Logout
         </button>
       </header>
-      <button onClick={() => setFunctionality("profile")}>view profile</button>
-      <button onClick={() => setFunctionality("update")}>update profile</button>
-
-      {functionality === "profile" && <Profile userData={userData} />}
-      {functionality === "update" && <Update userData={userData} />}
+      {children}
     </div>
   );
 }
