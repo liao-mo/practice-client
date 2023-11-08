@@ -29,9 +29,9 @@ export default function SignUp({ handleSignUp }) {
         <label>Age</label>
         <input type="text" onChange={(e) => setAge(Number(e.target.value))} />
         <label>Email</label>
-        <input type="text" onChange={(e) => setEmail(e.target.value)} />
+        <input type="email" onChange={(e) => setEmail(e.target.value)} />
         <label>password</label>
-        <input type="text" onChange={(e) => setPassword(e.target.value)} />
+        <input type="password" onChange={(e) => setPassword(e.target.value)} />
         <button>Sign up</button>
       </form>
     </div>

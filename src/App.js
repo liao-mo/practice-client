@@ -11,6 +11,7 @@ import UpdatePassword from "./components/UpdatePassword";
 function App() {
   const [isLogin, setIsLogin] = useState(false);
   const [userData, setUserData] = useState(undefined);
+  const [userAvatar, setUserAvatar] = useState(undefined);
   const [currentPage, setCurrentPage] = useState("login");
   const [functionality, setFunctionality] = useState("profile");
 
@@ -36,6 +37,7 @@ function App() {
         if (res.status === 200) {
           setIsLogin(true);
           setUserData(res.data);
+          getUserAvatar(res.data._id);
         }
       } catch (error) {
         console.log(error);
@@ -47,6 +49,18 @@ function App() {
       authenticate();
     }
   }, []);
+
+  function getUserAvatar(id) {
+    axios
+      .get(`http://localhost:3000/users/${id}/avatar`, {
+        responseType: "blob",
+      })
+      .then((response) => {
+        const imageUrl = URL.createObjectURL(response.data);
+        setUserAvatar(imageUrl);
+      })
+      .catch((error) => console.error("Error fetching image:", error));
+  }
 
   function handleLogin(data) {
     setIsLogin(true);
@@ -111,8 +125,13 @@ function App() {
   function handleUpdate(e, data) {
     e.preventDefault();
 
-    //setup config for the request
-    let config = {
+    //save portrait and remove from data object
+    let formData = new FormData();
+    formData.append("avatar", data.portrait);
+    delete data.portrait;
+
+    //setup config for the update request
+    let updateProfileConfig = {
       method: "patch",
       maxBodyLength: Infinity,
       url: "http://localhost:3000/users/me",
@@ -125,11 +144,33 @@ function App() {
     //fire request for updating user profile
     async function requestUpdate() {
       try {
-        const rawData = await axios.request(config);
+        const rawData = await axios.request(updateProfileConfig);
 
         //update the userData state
         let data = rawData.data;
         setUserData({ ...userData, ...data });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    let uploadAvatarConfig = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: "http://localhost:3000/users/me/avatar",
+      headers: {
+        Authorization: "Bearer " + Cookies.get("jwt"),
+      },
+      data: formData,
+    };
+
+    // fire request for uploading user avatar
+    async function requestUploadAvatar() {
+      try {
+        await axios.request(uploadAvatarConfig);
+
+        //update the userData state
+        getUserAvatar(userData._id);
 
         //change the page back to the profile page
         setFunctionality("profile");
@@ -137,7 +178,9 @@ function App() {
         console.log(error);
       }
     }
+
     requestUpdate();
+    requestUploadAvatar();
   }
 
   return (
@@ -182,11 +225,15 @@ function App() {
             update password
           </button>
 
-          {functionality === "profile" && <Profile userData={userData} />}
+          {functionality === "profile" && (
+            <Profile userData={userData} userAvatar={userAvatar} />
+          )}
           {functionality === "updateProfile" && (
             <UpdateProfile userData={userData} onUpdate={handleUpdate} />
           )}
-          {functionality === "updatePassword" && <UpdatePassword />}
+          {functionality === "updatePassword" && (
+            <UpdatePassword onUpdate={handleUpdate} />
+          )}
         </ControlPanel>
       )}
     </div>

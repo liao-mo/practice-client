@@ -1,3 +1,4 @@
+/* Base Styles */
 .App {
   width: 1000px;
   margin: 50px auto;
@@ -29,15 +30,14 @@ h1 {
   font-weight: 500;
 }
 
+/* Form Styles */
 .input-grid {
   font-size: 24px;
   display: grid;
   width: 800px;
   grid-template-columns: 1fr 2fr;
   gap: 15px;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 20px;
+  margin: 0 auto 20px auto;
 }
 
 .input-grid label {
@@ -69,6 +69,7 @@ h1 {
   background-color: #52b9cb;
 }
 
+/* Control Header */
 .control-header {
   display: flex;
   align-items: center;
@@ -81,12 +82,13 @@ h1 {
   padding-left: 24px;
 }
 
+/* Signup Form Styles */
 .signup-box {
   padding-bottom: 20px;
 }
 
 .signup-form {
-  margin: 0px auto;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -116,6 +118,7 @@ h1 {
   box-shadow: 0px 10px 15px 0px #00000024;
 }
 
+/* Navigation Buttons */
 .btn-nav {
   font-size: 16px;
   cursor: pointer;
@@ -129,6 +132,7 @@ h1 {
   background-color: #52b9cb;
 }
 
+/* Logout Button */
 .btn-logout {
   width: 100px;
   height: 50px;
@@ -142,6 +146,7 @@ h1 {
   background-color: #52b9cb;
 }
 
+/* Row Styles */
 .row {
   margin: 20px;
   width: 550px;
@@ -153,6 +158,8 @@ h1 {
 .row input {
   width: 350px;
 }
+
+/* User Update */
 .user-update {
 }
 
@@ -165,4 +172,20 @@ h1 {
 .btn-update:hover {
   font-size: 24px;
   background-color: #7a8794;
+}
+
+.password-warning {
+  color: red;
+  margin-left: 20px;
+}
+
+.user-portrait {
+  margin-top: 15px;
+  width: 250px;
+  height: 250px;
+}
+
+.portrait-warning {
+  color: red;
+  margin-left: 20px;
 }

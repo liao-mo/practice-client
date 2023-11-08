@@ -46,7 +46,7 @@ export default function Login({ onLogin }) {
       <div className="input-grid">
         <label>Email</label>
         <input
-          type="text"
+          type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
