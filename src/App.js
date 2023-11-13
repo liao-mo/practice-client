@@ -7,6 +7,7 @@ import SignUp from "./components/SignUp";
 import Profile from "./components/Profile";
 import UpdateProfile from "./components/UpdateProfile";
 import UpdatePassword from "./components/UpdatePassword";
+import Tasks from "./components/Tasks";
 
 function App() {
   const [isLogin, setIsLogin] = useState(false);
@@ -128,6 +129,7 @@ function App() {
     //save portrait and remove from data object
     let formData = new FormData();
     formData.append("avatar", data.portrait);
+    let hasAvatar = data.portrait ? true : false;
     delete data.portrait;
 
     //setup config for the update request
@@ -180,7 +182,9 @@ function App() {
     }
 
     requestUpdate();
-    requestUploadAvatar();
+    if (hasAvatar) {
+      requestUploadAvatar();
+    }
   }
 
   return (
@@ -206,6 +210,9 @@ function App() {
         </>
       ) : (
         <ControlPanel onLogout={handleLogout}>
+          <button className="btn-nav" onClick={() => setFunctionality("tasks")}>
+            My tasks
+          </button>
           <button
             className="btn-nav"
             onClick={() => setFunctionality("profile")}
@@ -234,6 +241,7 @@ function App() {
           {functionality === "updatePassword" && (
             <UpdatePassword onUpdate={handleUpdate} />
           )}
+          {functionality === "tasks" && <Tasks />}
         </ControlPanel>
       )}
     </div>
