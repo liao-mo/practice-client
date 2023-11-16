@@ -191,7 +191,24 @@ h1 {
 }
 
 .tasks-container {
-  margin: 10px;
+  margin-top: 15px;
   padding: 20px;
   background-color: aliceblue;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.task {
+  width: 350px;
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
+  font-size: 24px;
+  padding: 5px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+}
+
+.task-description {
+  flex: 3;
 }

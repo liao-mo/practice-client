@@ -14,25 +14,17 @@ function App() {
   const [userData, setUserData] = useState(undefined);
   const [userAvatar, setUserAvatar] = useState(undefined);
   const [currentPage, setCurrentPage] = useState("login");
-  const [functionality, setFunctionality] = useState("profile");
+  const [functionality, setFunctionality] = useState("tasks");
 
   useEffect(function () {
     const token = Cookies.get("jwt");
+    axios.defaults.headers.common["Authorization"] = "Bearer " + token;
     // console.log(token);
 
     //authorize user using jwt token stored in the cookies
     async function authenticate() {
-      let config = {
-        method: "get",
-        maxBodyLength: Infinity,
-        url: "http://localhost:3000/users/me",
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      };
-
       try {
-        const res = await axios.request(config);
+        const res = await axios.get("http://localhost:3000/users/me");
 
         //sucessfully authenticate
         if (res.status === 200) {
